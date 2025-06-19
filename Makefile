@@ -1,6 +1,3 @@
-ifndef CI
-  PROFILE := personal
-endif
 ACCOUNT_ID := 846447858735
 REGION := us-east-1
 
@@ -15,7 +12,7 @@ create-stacks:
 # Parameters
 # 	- stack: string = Name of stack to create.
 create-stack:
-	aws $(if $(PROFILE),--profile $(PROFILE)) --region $(REGION) cloudformation deploy \
+	aws --region $(REGION) cloudformation deploy \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--template-file infra/$(stack).yaml \
 		--stack-name $(stack)
@@ -23,10 +20,10 @@ create-stack:
 lambda:
 	make create-stack stack=lambda; \
 	cargo lambda build --release --arm64
-	cargo lambda deploy $(if $(PROFILE),--profile $(PROFILE)) --region $(REGION) \
+	cargo lambda deploy --region $(REGION) \
 		--iam-role arn:aws:iam::$(ACCOUNT_ID):role/ArcxpLambdaRole; \
 	sleep 10; \
-	aws $(if $(PROFILE),--profile $(PROFILE)) --region $(REGION) lambda update-function-configuration \
+	aws --region $(REGION) lambda update-function-configuration \
 		--function-name arcxp \
 		--environment "Variables={DEPLOY_TARGET=lambda,ENV=production}" \
 		--no-cli-pager
