@@ -1,0 +1,30 @@
+ACCOUNT_ID := 846447858735
+PROFILE := personal
+REGION := us-east-1
+
+run:
+	./scripts/run-dev.sh
+
+create-stacks:
+	make lambda
+	make create-stack stack=dynamodb env=$$env
+	make create-stack stack=api-gateway env=$$env
+
+# Parameters
+# 	- stack: string = Name of stack to create.
+create-stack:
+	aws --profile $(PROFILE) --region $(REGION) cloudformation deploy \
+		--capabilities CAPABILITY_NAMED_IAM \
+		--template-file infra/$(stack).yaml \
+		--stack-name $(stack)
+
+lambda:
+	make create-stack stack=lambda; \
+	cargo lambda build --release --arm64
+	cargo lambda deploy --profile $(PROFILE) --region $(REGION) \
+		--iam-role arn:aws:iam::$(ACCOUNT_ID):role/ArcxpLambdaRole; \
+	sleep 10; \
+	aws --profile $(PROFILE) --region $(REGION) lambda update-function-configuration \
+		--function-name arcxp \
+		--environment "Variables={DEPLOY_TARGET=lambda,ENV=production}" \
+		--no-cli-pager

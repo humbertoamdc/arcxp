@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CF template to create the main api gateway for our backend.
+Resources:
+
+  # ===============
+  # | Permissions |
+  # ===============
+
+  # Grant permission to the api gateway to execute the api lambda function.
+  ApiGatewayExecuteLambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:arcxp'
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub 'arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ApiGateway}/*/*/{proxy+}'
+
+  # ===============
+  # | Api Gateway |
+  # ===============
+
+  ApiGateway:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      CorsConfiguration:
+        AllowCredentials: true
+        AllowHeaders:
+          - content-type
+          - origin
+        AllowMethods:
+          - GET
+          - POST
+          - OPTIONS
+          - PATCH
+          - PUT
+          - DELETE
+        MaxAge: 3600
+      DisableExecuteApiEndpoint: false
+      Name: arcxp-http-api
+      ProtocolType: HTTP
+
+  ApiGatewayLambdaIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref ApiGateway
+      Description: >-
+        Integration that connects the Api Gateway routes with the backend.
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Join
+        - ''
+        - - !Sub 'arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/'
+          - !Sub 'arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:arcxp/invocations'
+      PayloadFormatVersion: 2.0
+
+  ApiGatewayGETProxyRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: GET /{proxy+}
+      Target: !Sub 'integrations/${ApiGatewayLambdaIntegration}'
+
+  ApiGatewayPOSTProxyRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: POST /{proxy+}
+      Target: !Sub 'integrations/${ApiGatewayLambdaIntegration}'
+
+  ApiGatewayPATCHProxyRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: PATCH /{proxy+}
+      Target: !Sub 'integrations/${ApiGatewayLambdaIntegration}'
+
+  ApiGatewayPUTProxyRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: PUT /{proxy+}
+      Target: !Sub 'integrations/${ApiGatewayLambdaIntegration}'
+
+  ApiGatewayDELETEProxyRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref ApiGateway
+      RouteKey: DELETE /{proxy+}
+      Target: !Sub 'integrations/${ApiGatewayLambdaIntegration}'
+
+  ApiGatewayStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref ApiGateway
+      AutoDeploy: true
+      StageName: $default
+
