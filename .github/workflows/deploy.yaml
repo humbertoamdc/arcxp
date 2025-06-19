@@ -30,7 +30,7 @@ jobs:
 
       - name: Install cargo-lambda
         run: |
-          curl -s https://raw.githubusercontent.com/cargo-lambda/cargo-lambda/main/tools/install.sh | bash
+          curl -fsSL https://cargo-lambda.info/install.sh | sh
           echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
       - name: Configure AWS credentials
