@@ -27,11 +27,15 @@ jobs:
           output: swagger-ui
           spec-file: openapi.yaml
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Debug Swagger UI output
+        run: ls -al swagger-ui || echo "swagger-ui not found"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: swagger-ui
+          publish_dir: ./swagger-ui
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
