@@ -19,7 +19,7 @@ create-stack:
 
 lambda:
 	make create-stack stack=lambda; \
-	cargo lambda build --release --arm64
+	cargo lambda build --release --target x86_64-unknown-linux-gnu.2.17; \
 	cargo lambda deploy --region $(REGION) \
 		--iam-role arn:aws:iam::$(ACCOUNT_ID):role/ArcxpLambdaRole; \
 	sleep 10; \
