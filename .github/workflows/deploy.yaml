@@ -56,7 +56,7 @@ jobs:
       - name: Release lambda
         run: |
           pip install cargo-lambda
-          cargo lambda build --release
+          cargo lambda build --release --arm64
           cargo lambda deploy arcxp --iam-role arn:aws:iam::846447858735:role/ArcxpLambdaRole;
         env:
           AWS_DEFAULT_REGION: us-east-1
