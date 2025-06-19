@@ -165,14 +165,17 @@ components:
       type: string
       enum:
         - New
+        - Triaging
         - InProgress
+        - InReview
+        - Done
         - Closed
-        # Add more if defined in your `TicketStatus` enum
 
     TicketPriority:
       type: string
       enum:
-        - Low
-        - Medium
-        - High
-        # Add more if defined in your `TicketPriority` enum
+        - P0
+        - P1
+        - P2
+        - P3
+        - P4
