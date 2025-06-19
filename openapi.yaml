@@ -1,0 +1,181 @@
+openapi: 3.0.3
+info:
+  title: Ticket API
+  version: 1.0.0
+  description: API for creating, assigning, and updating tickets.
+
+servers:
+  - url: http://localhost:3000
+  - url: https://vvsy6ci1wa.execute-api.us-east-1.amazonaws.com
+
+paths:
+  /tickets:
+    get:
+      summary: List all tickets
+      responses:
+        '200':
+          description: A list of tickets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '500':
+          description: Server error
+
+    post:
+      summary: Create a new ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTicketRequest'
+      responses:
+        '200':
+          description: Ticket created successfully
+        '500':
+          description: Server error
+
+  /tickets/batch:
+    post:
+      summary: Batch create tickets
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchCreateTicketsRequest'
+      responses:
+        '200':
+          description: Tickets created successfully
+        '500':
+          description: Server error
+
+  /tickets/status:
+    put:
+      summary: Update ticket status
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTicketStatusRequest'
+      responses:
+        '200':
+          description: Ticket status updated
+        '500':
+          description: Server error
+
+  /tickets/assignee:
+    put:
+      summary: Assign a person to a ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTicketRequest'
+      responses:
+        '200':
+          description: Ticket assigned successfully
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    CreateTicketRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          $ref: '#/components/schemas/TicketPriority'
+      required: [ ]
+
+    UpdateTicketStatusRequest:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/TicketStatus'
+      required:
+        - id
+        - status
+
+    AssignTicketRequest:
+      type: object
+      properties:
+        ticket_id:
+          type: string
+        assignee_id:
+          type: string
+      required:
+        - ticket_id
+        - assignee_id
+
+    BatchCreateTicketsRequest:
+      type: object
+      properties:
+        tickets_data:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchCreateTicketsData'
+      required:
+        - tickets_data
+
+    BatchCreateTicketsData:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        priority:
+          $ref: '#/components/schemas/TicketPriority'
+
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TicketStatus'
+        priority:
+          $ref: '#/components/schemas/TicketPriority'
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TicketStatus:
+      type: string
+      enum:
+        - New
+        - Triaging
+        - InProgress
+        - InReview
+        - Done
+        - Closed
+
+    TicketPriority:
+      type: string
+      enum:
+        - P0
+        - P1
+        - P2
+        - P3
+        - P4
