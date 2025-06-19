@@ -37,6 +37,8 @@ jobs:
         run: |
           curl -s https://zigup.dev/install.sh | bash
           echo "$HOME/.zig/bin" >> $GITHUB_PATH
+          export PATH="$HOME/.zig/bin:$PATH"
+          zig version
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4.1.0
