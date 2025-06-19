@@ -19,37 +19,30 @@ jobs:
       PROFILE: personal
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v3
 
-      - name: Set up Rust
+      - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
+          profile: minimal
           override: true
 
-      - name: Install cargo-lambda
-        run: |
-          curl -fsSL https://cargo-lambda.info/install.sh | sh
-          echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-
-      - name: Install Zig
-        run: |
-          curl -s https://zigup.dev/install.sh | bash
-          echo "$HOME/.zig/bin" >> $GITHUB_PATH
-          export PATH="$HOME/.zig/bin:$PATH"
-          zig version
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4.1.0
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        continue-on-error: false
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: cargo-build-cache
 
-      - name: Install Make + dependencies
+      - name: Release lambda
         run: |
-          sudo apt-get update && sudo apt-get install -y make unzip
-
-      - name: Deploy Lambda
-        run: make lambda
+          pip install cargo-lambda
+          cargo lambda build --release
+          cargo lambda deploy arcxp -iam-role arn:aws:iam::846447858735:role/ArcxpLambdaRole;
+        env:
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
