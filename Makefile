@@ -1,5 +1,7 @@
+ifndef CI
+  PROFILE := personal
+endif
 ACCOUNT_ID := 846447858735
-PROFILE := personal
 REGION := us-east-1
 
 run:
