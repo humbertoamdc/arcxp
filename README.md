@@ -32,7 +32,7 @@ and production-minded.
 ---
 
 - Docker
-- [AWS CLI](https://aws.amazon.com/cli/) + AWS credentials for deployment
+- [AWS CLI](https://aws.amazon.com/cli/)
 - [Rust](https://www.rust-lang.org/tools/install) (latest stable)
 - [cargo-watch](https://crates.io/crates/cargo-watch) (for local dev)
 
