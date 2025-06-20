@@ -90,8 +90,8 @@ Endpoints:
 ```
 GET  /tickets               - Get all existing tickets
 POST /tickets               - Create a new ticket
-PUT  /tickets/{id}/assign   - Assign ticket
-PUT  /tickets/{id}/status   - Update ticket status
+PUT  /tickets/assignee      - Assign ticket
+PUT  /tickets/status        - Update ticket status
 POST /tickets/batch         - Bulk create tickets
 ```
 
