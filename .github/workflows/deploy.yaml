@@ -21,22 +21,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Generate Swagger UI
-        uses: Legion2/swagger-ui-action@v1
-        with:
-          output: swagger-ui
-          spec-file: openapi.yaml
-          GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
-
-      - name: Debug Swagger UI output
-        run: ls -al swagger-ui || echo "swagger-ui not found"
-
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
-          publish_dir: ./swagger-ui
-
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -62,3 +46,20 @@ jobs:
           AWS_DEFAULT_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+  generate-docs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate Swagger UI
+        uses: Legion2/swagger-ui-action@v1
+        with:
+          output: swagger-ui
+          spec-file: openapi.yaml
+          GITHUB_TOKEN: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_GITHUB_TOKEN }}
+          publish_dir: ./swagger-ui

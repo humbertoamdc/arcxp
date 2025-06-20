@@ -6,7 +6,7 @@ info:
 
 servers:
   - url: http://localhost:3000
-  - url: https://vvsy6ci1wa.execute-api.us-east-1.amazonaws.com
+  - url: https://arcxp.humbertotech.com
 
 paths:
   /tickets:

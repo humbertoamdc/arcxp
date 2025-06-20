@@ -7,6 +7,7 @@ run:
 create-stacks:
 	make lambda
 	make create-stack stack=dynamodb env=$$env
+	make create-stack stack=certificate-manager
 	make create-stack stack=api-gateway env=$$env
 
 # Parameters

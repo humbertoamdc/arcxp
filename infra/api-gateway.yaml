@@ -94,3 +94,37 @@ Resources:
       AutoDeploy: true
       StageName: $default
 
+  # ================================================
+  # | Api Gateway custom domain and domain mapping |
+  # ================================================
+
+  ApiGatewayCustomDomain:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: arcxp.humbertotech.com
+      DomainNameConfigurations:
+        - CertificateArn: !ImportValue ApiCertificateArn
+          CertificateName: Api Certificate
+          EndpointType: Regional
+          SecurityPolicy: TLS_1_2
+
+  ApiGatewayDomainMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      ApiId: !Ref ApiGateway
+      DomainName: arcxp.humbertotech.com
+      Stage: !Ref ApiGatewayStage
+    DependsOn:
+      - ApiGatewayCustomDomain
+
+  Route53ApiRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      AliasTarget:
+        DNSName: !GetAtt ApiGatewayCustomDomain.RegionalDomainName
+        EvaluateTargetHealth: true
+        HostedZoneId: !GetAtt ApiGatewayCustomDomain.RegionalHostedZoneId
+      Comment: Record that maps arcxp.humbertotech.com to the api gateway domain name.
+      HostedZoneName: humbertotech.com.
+      Name: arcxp.humbertotech.com
+      Type: A

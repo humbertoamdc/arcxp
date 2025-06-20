@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CF template to create TLS/SSL certificates.
+Resources:
+
+  # ================
+  # | Certificates |
+  # ================
+
+  ArcxpApiCertificate:
+    Type: AWS::CertificateManager::Certificate
+    Properties:
+      DomainName: arcxp.humbertotech.com
+      ValidationMethod: DNS
+
+Outputs:
+  ArcxpApiCertificateArn:
+    Description: ARN for the arcxp api certificate.
+    Value: !Ref ArcxpApiCertificate
+    Export:
+      Name: ApiCertificateArn
