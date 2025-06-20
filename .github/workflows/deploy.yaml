@@ -49,10 +49,11 @@ jobs:
 
   generate-docs:
     runs-on: ubuntu-latest
+    needs: deploy
 
     steps:
       - uses: actions/checkout@v3
-        
+
       - name: Generate Swagger UI
         uses: Legion2/swagger-ui-action@v1
         with:
