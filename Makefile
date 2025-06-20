@@ -1,8 +1,15 @@
 ACCOUNT_ID := 846447858735
 REGION := us-east-1
 
+# === App ===
+
 run:
 	./scripts/run-dev.sh
+
+test:
+	./scripts/run-tests.sh
+
+# === Infra ===
 
 create-stacks:
 	make lambda

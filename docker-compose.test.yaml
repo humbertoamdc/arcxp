@@ -1,11 +1,11 @@
-name: arcxp
+name: arcxp-test
 services:
   localstack:
-    container_name: arcxp-localstack
+    container_name: arcxp-localstack-test
     image: localstack/localstack:latest
     ports:
-      - "127.0.0.1:4566:4566"            # LocalStack Gateway
-      - "127.0.0.1:4510-4559:4510-4559"  # external services port range
+      - "127.0.0.1:4576:4566"            # LocalStack Gateway (shifted from 4566)
+      - "127.0.0.1:4520-4569:4510-4559"  # external services port range (shifted)
     environment:
       - DEBUG=${DEBUG-}
       - DOCKER_HOST=unix:///var/run/docker.sock
@@ -14,5 +14,3 @@ services:
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
       - "./scripts/localstack:/etc/localstack/init/ready.d"
-      - "${LOCALSTACK_VOLUME_DIR:-./volumes/localstack}:/var/lib/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"

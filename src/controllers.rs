@@ -34,7 +34,7 @@ pub async fn create_ticket(
     let result = usecase.execute(request).await;
 
     match result {
-        Ok(response) => Ok((StatusCode::OK, Json(response))),
+        Ok(_) => Ok(StatusCode::OK),
         Err(e) => {
             tracing::error!("{:?}", e);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
@@ -50,7 +50,7 @@ pub async fn update_ticket_status(
     let result = usecase.execute(request).await;
 
     match result {
-        Ok(response) => Ok((StatusCode::OK, Json(response))),
+        Ok(_) => Ok(StatusCode::OK),
         Err(e) => {
             tracing::error!("{:?}", e);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
@@ -65,7 +65,7 @@ pub async fn assign_ticket(
     let result = usecase.execute(request).await;
 
     match result {
-        Ok(response) => Ok((StatusCode::OK, Json(response))),
+        Ok(_) => Ok(StatusCode::OK),
         Err(e) => {
             tracing::error!("{:?}", e);
             Err(StatusCode::INTERNAL_SERVER_ERROR)
@@ -80,7 +80,7 @@ pub async fn batch_create_tickets(
     let result = usecase.execute(request).await;
 
     match result {
-        Ok(response) => Ok((StatusCode::OK, Json(response))),
+        Ok(_) => Ok(StatusCode::OK),
         Err(e) => {
             tracing::error!("{:?}", e);
             Err(StatusCode::INTERNAL_SERVER_ERROR)

@@ -1,19 +1,9 @@
-mod app_state;
-mod controllers;
-pub mod entities;
-pub mod requests;
-mod tickets_repository;
-pub mod usecases;
-
-use crate::app_state::AppState;
-use crate::controllers::{
+use arcxp::app_state::AppState;
+use arcxp::controllers::{
     assign_ticket, batch_create_tickets, create_ticket, query_tickets, update_ticket_status,
 };
-use axum::routing::put;
-use axum::{
-    routing::{get, post},
-    Router,
-};
+use axum::routing::{get, post, put};
+use axum::Router;
 use std::env;
 
 #[tokio::main]

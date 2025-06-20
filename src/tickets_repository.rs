@@ -150,4 +150,30 @@ impl TicketRepository {
 
         Ok(())
     }
+
+    #[cfg(feature = "test-utils")]
+    pub async fn clear_tickets_table(&self) {
+        let items = self
+            .client
+            .scan()
+            .table_name(&self.table_name)
+            .send()
+            .await
+            .unwrap()
+            .items
+            .unwrap_or_default();
+
+        for item in items {
+            // Assuming PK is `id` and is a string
+            if let Some(AttributeValue::S(id)) = item.get("id") {
+                let _ = self
+                    .client
+                    .delete_item()
+                    .table_name(&self.table_name)
+                    .key("id", AttributeValue::S(id.clone()))
+                    .send()
+                    .await;
+            }
+        }
+    }
 }
