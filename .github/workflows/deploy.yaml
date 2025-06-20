@@ -23,6 +23,10 @@ jobs:
       - name: Create Infra
         run: ./scripts/localstack/tickets.sh
 
+      - name: Debug LocalStack
+        run: |
+          curl http://localhost:4566/_localstack/health
+
       - name: Install Rust
         uses: actions-rs/toolchain@v1
         with:
@@ -30,8 +34,22 @@ jobs:
           profile: minimal
           override: true
 
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        continue-on-error: false
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: cargo-build-cache
+
+      - name: Build Project
+        run: cargo build
+
       - name: Run Tests
         run: cargo test --features test-utils
+        env:
+          AWS_ENDPOINT_URL: http://localhost:4576
 
   deploy:
     runs-on: ubuntu-latest
