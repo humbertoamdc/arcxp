@@ -5,8 +5,8 @@ info:
   description: API for creating, assigning, and updating tickets.
 
 servers:
+  - url: https://arcxp.humbertotech.com
   - url: http://localhost:3000
-  - url: https://vvsy6ci1wa.execute-api.us-east-1.amazonaws.com
 
 paths:
   /tickets:
