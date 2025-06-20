@@ -57,6 +57,12 @@ jobs:
           profile: minimal
           override: true
 
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+        with:
+          version: 2
+          verbose: false
+
       - name: Cache cargo registry
         uses: actions/cache@v3
         continue-on-error: false
@@ -71,6 +77,7 @@ jobs:
           pip install cargo-lambda
           cargo lambda build --release --arm64
           cargo lambda deploy arcxp --iam-role arn:aws:iam::846447858735:role/ArcxpLambdaRole;
+          aws --region us-east-1 lambda update-function-configuration --function-name arcxp --environment "Variables={DEPLOY_TARGET=lambda,ENV=production}" --no-cli-pager
         env:
           AWS_DEFAULT_REGION: us-east-1
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
