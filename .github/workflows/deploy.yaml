@@ -78,10 +78,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: Install AWS CLI
-        run: |
-          apt-get -y update
-          apt-get -y install python3-pip
-          pip3 install awscli
+        run: pip install awscli
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
