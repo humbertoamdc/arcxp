@@ -21,10 +21,11 @@ jobs:
           install-awslocal: true
 
       - name: Create Infra
-        run: ./scripts/tickets.sh
+        run: ./scripts/localstack/tickets.sh
 
   deploy:
     runs-on: ubuntu-latest
+    needs: tests
 
     env:
       AWS_REGION: us-east-1
