@@ -77,6 +77,7 @@ jobs:
           pip install cargo-lambda
           cargo lambda build --release --arm64
           cargo lambda deploy arcxp --iam-role arn:aws:iam::846447858735:role/ArcxpLambdaRole;
+          sleep 10;
           aws --region us-east-1 lambda update-function-configuration --function-name arcxp --environment "Variables={DEPLOY_TARGET=lambda,ENV=production}" --no-cli-pager
         env:
           AWS_DEFAULT_REGION: us-east-1
