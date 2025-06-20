@@ -8,8 +8,6 @@ pub mod common {
     use axum_test::TestServer;
 
     pub async fn init_test_server() -> (TestServer, AppState) {
-        std::env::set_var("AWS_ENDPOINT_URL", "http://127.0.0.1:4576");
-
         let app_state = AppState::new().await;
 
         let app = Router::new()
