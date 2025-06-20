@@ -34,6 +34,8 @@ Resources:
           - PATCH
           - PUT
           - DELETE
+        AllowOrigins:
+          - https://humbertoamdc.github.io
         MaxAge: 3600
       DisableExecuteApiEndpoint: false
       Name: arcxp-http-api
