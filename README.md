@@ -5,7 +5,7 @@ built with Axum and deployed to AWS Lambda. This project serves as a proof of
 concept (POC) for a job application and is designed to be minimal, well-structured,
 and production-minded.
 
-### [Public URL](https://arcxp.humbertotech.com)
+### [Public URL](https://arcxp.humbertotech.com/tickets)
 
 ### [Swagger UI](https://humbertoamdc.github.io/arcxp/#/)
 
