@@ -13,17 +13,27 @@ test:
 
 create-stacks:
 	make lambda
-	make create-stack stack=dynamodb env=$$env
+	make create-stack stack=dynamodb
 	make create-stack stack=certificate-manager
-	make create-stack stack=api-gateway env=$$env
+	make create-stack stack=api-gateway
 
-# Parameters
-# 	- stack: string = Name of stack to create.
+
+delete-stacks:
+	make delete-stack stack=api-gateway
+	make delete-stack stack=certificate-manager
+	make delete-stack stack=dynamodb
+
 create-stack:
 	aws --region $(REGION) cloudformation deploy \
 		--capabilities CAPABILITY_NAMED_IAM \
 		--template-file infra/$(stack).yaml \
 		--stack-name $(stack)
+
+delete-stack:
+	aws --region $(REGION) cloudformation delete-stack \
+		--stack-name $(stack); \
+	aws --region $(REGION) cloudformation wait stack-delete-complete \
+		--stack-name $(stack); \
 
 lambda:
 	make create-stack stack=lambda; \
